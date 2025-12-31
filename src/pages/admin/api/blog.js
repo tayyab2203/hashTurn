@@ -1,11 +1,10 @@
-import type { APIRoute } from 'astro';
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 const BLOG_DATA_PATH = join(process.cwd(), 'src', 'data', 'blog.json');
 
 // Simple authentication check (you should enhance this with proper auth)
-function isAuthenticated(request: Request): boolean {
+function isAuthenticated(request) {
   // For now, check for a simple API key in headers
   // In production, use proper authentication (JWT, session, etc.)
   const apiKey = request.headers.get('x-api-key');
@@ -21,7 +20,7 @@ function isAuthenticated(request: Request): boolean {
 }
 
 // GET - List all blogs
-export const GET: APIRoute = async ({ request }) => {
+export async function GET({ request }) {
   try {
     if (!isAuthenticated(request)) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -44,10 +43,10 @@ export const GET: APIRoute = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-};
+}
 
 // POST - Create new blog
-export const POST: APIRoute = async ({ request }) => {
+export async function POST({ request }) {
   try {
     if (!isAuthenticated(request)) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -78,7 +77,7 @@ export const POST: APIRoute = async ({ request }) => {
     const blogs = JSON.parse(fileContent);
 
     // Check if slug already exists
-    if (blogs.some((blog: any) => blog.slug === blogSlug)) {
+    if (blogs.some((blog) => blog.slug === blogSlug)) {
       return new Response(JSON.stringify({ error: 'Blog with this slug already exists' }), {
         status: 409,
         headers: { 'Content-Type': 'application/json' },
@@ -113,5 +112,5 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-};
+}
 

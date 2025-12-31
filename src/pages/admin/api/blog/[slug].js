@@ -1,11 +1,10 @@
-import type { APIRoute } from 'astro';
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 const BLOG_DATA_PATH = join(process.cwd(), 'src', 'data', 'blog.json');
 
 // Simple authentication check
-function isAuthenticated(request: Request): boolean {
+function isAuthenticated(request) {
   const apiKey = request.headers.get('x-api-key');
   const authHeader = request.headers.get('authorization');
   
@@ -17,7 +16,7 @@ function isAuthenticated(request: Request): boolean {
 }
 
 // PUT - Update blog
-export const PUT: APIRoute = async ({ params, request }) => {
+export async function PUT({ params, request }) {
   try {
     if (!isAuthenticated(request)) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -42,7 +41,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     const blogs = JSON.parse(fileContent);
 
     // Find blog index
-    const blogIndex = blogs.findIndex((blog: any) => blog.slug === slug);
+    const blogIndex = blogs.findIndex((blog) => blog.slug === slug);
     if (blogIndex === -1) {
       return new Response(JSON.stringify({ error: 'Blog not found' }), {
         status: 404,
@@ -52,7 +51,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
 
     // Check if new slug already exists (if changing slug)
     if (newSlug && newSlug !== slug) {
-      if (blogs.some((blog: any) => blog.slug === newSlug)) {
+      if (blogs.some((blog) => blog.slug === newSlug)) {
         return new Response(JSON.stringify({ error: 'Blog with this slug already exists' }), {
           status: 409,
           headers: { 'Content-Type': 'application/json' },
@@ -88,10 +87,10 @@ export const PUT: APIRoute = async ({ params, request }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-};
+}
 
 // DELETE - Delete blog
-export const DELETE: APIRoute = async ({ params, request }) => {
+export async function DELETE({ params, request }) {
   try {
     if (!isAuthenticated(request)) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -113,7 +112,7 @@ export const DELETE: APIRoute = async ({ params, request }) => {
     const blogs = JSON.parse(fileContent);
 
     // Find blog index
-    const blogIndex = blogs.findIndex((blog: any) => blog.slug === slug);
+    const blogIndex = blogs.findIndex((blog) => blog.slug === slug);
     if (blogIndex === -1) {
       return new Response(JSON.stringify({ error: 'Blog not found' }), {
         status: 404,
@@ -138,5 +137,5 @@ export const DELETE: APIRoute = async ({ params, request }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-};
+}
 
