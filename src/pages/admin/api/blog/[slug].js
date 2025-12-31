@@ -1,6 +1,8 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
+export const prerender = false;
+
 const BLOG_DATA_PATH = join(process.cwd(), 'src', 'data', 'blog.json');
 
 // Simple authentication check
