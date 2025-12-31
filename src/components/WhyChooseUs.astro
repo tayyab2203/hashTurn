@@ -1,0 +1,156 @@
+---
+const features = [
+  {
+    icon: '🎯',
+    title: 'Proven Expertise',
+    description: 'Over 10 years of experience delivering exceptional digital solutions for businesses worldwide.'
+  },
+  {
+    icon: '⚡',
+    title: 'Fast Delivery',
+    description: 'We understand time is valuable. Our streamlined processes ensure quick turnaround without compromising quality.'
+  },
+  {
+    icon: '🔒',
+    title: 'Secure & Reliable',
+    description: 'Enterprise-grade security and 99.9% uptime guarantee. Your data and applications are always protected.'
+  },
+  {
+    icon: '💡',
+    title: 'Innovation First',
+    description: 'We stay ahead of the curve with cutting-edge technologies and modern development practices.'
+  },
+  {
+    icon: '🤝',
+    title: 'Dedicated Support',
+    description: '24/7 support team ready to assist you. We\'re committed to your success every step of the way.'
+  },
+  {
+    icon: '💰',
+    title: 'Transparent Pricing',
+    description: 'No hidden fees or surprises. Clear, upfront pricing with flexible payment options that fit your budget.'
+  }
+];
+---
+
+<section class="why-choose-us section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Why Choose Us</span>
+      <h2>What Sets Us Apart</h2>
+      <p>We combine technical excellence with creative innovation to deliver solutions that drive real business results</p>
+    </div>
+    
+    <div class="features-grid">
+      {features.map((feature) => (
+        <div class="feature-card">
+          <div class="feature-icon">{feature.icon}</div>
+          <h3 class="feature-title">{feature.title}</h3>
+          <p class="feature-description">{feature.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-choose-us {
+    background: linear-gradient(to bottom, var(--color-white), #f8f9fa);
+    position: relative;
+  }
+
+  [data-theme="dark"] .why-choose-us {
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.9));
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-2xl);
+  }
+
+  .feature-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(130, 232, 200, 0.2);
+    border-radius: 20px;
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  [data-theme="dark"] .feature-card {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(130, 232, 200, 0.15);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(130, 232, 200, 0.15);
+    border-color: rgba(130, 232, 200, 0.4);
+  }
+
+  .feature-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: var(--spacing-md);
+    display: inline-block;
+    transition: transform 0.4s ease;
+  }
+
+  .feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .feature-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+  }
+
+  .feature-description {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 767px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    .feature-card {
+      padding: var(--spacing-lg);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+

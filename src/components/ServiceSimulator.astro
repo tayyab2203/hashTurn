@@ -1,0 +1,1159 @@
+---
+// Service Simulator Component - Interactive project estimator
+// Uses Three.js for 3D visualization, jsPDF for PDF generation
+interface Props {
+  serviceId?: string;
+}
+
+const { serviceId } = Astro.props;
+import servicesData from '../data/services.json';
+
+// Find service or use first one
+const selectedService = serviceId 
+  ? servicesData.find(s => s.id === serviceId) || servicesData[0]
+  : servicesData[0];
+
+const simulatorConfig = selectedService?.simulatorConfig || {
+  budget: { min: 5000, max: 50000, default: 20000, step: 1000 },
+  timeline: { min: 1, max: 6, default: 3, step: 1 },
+  features: [],
+  baseCost: 10000,
+  timelineFactor: 0.1
+};
+---
+
+<div class="service-simulator" id="service-simulator">
+  <div class="simulator-header">
+    <h2>Project Estimator</h2>
+    <p>Configure your project parameters and see real-time estimates</p>
+  </div>
+
+  <div class="simulator-content">
+    <!-- Input Panel -->
+    <div class="simulator-inputs">
+      <div class="input-group">
+        <label for="service-select">
+          Service Type
+        </label>
+        <select id="service-select" class="input-select" aria-label="Select service type">
+          {servicesData.map((service) => (
+            <option value={service.id} selected={service.id === selectedService.id}>
+              {service.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="budget-slider">
+          Budget: <span id="budget-value" class="value-display">$20K</span>
+        </label>
+        <input 
+          type="range" 
+          id="budget-slider" 
+          class="input-slider"
+          min={simulatorConfig.budget.min}
+          max={simulatorConfig.budget.max}
+          step={simulatorConfig.budget.step}
+          value={simulatorConfig.budget.default}
+          aria-label="Budget slider"
+          aria-valuemin={simulatorConfig.budget.min}
+          aria-valuemax={simulatorConfig.budget.max}
+          aria-valuenow={simulatorConfig.budget.default}
+        />
+        <div class="slider-labels">
+          <span>${(simulatorConfig.budget.min / 1000).toFixed(0)}K</span>
+          <span>${(simulatorConfig.budget.max / 1000).toFixed(0)}K</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="timeline-slider">
+          Timeline: <span id="timeline-value" class="value-display">3 months</span>
+        </label>
+        <input 
+          type="range" 
+          id="timeline-slider" 
+          class="input-slider"
+          min={simulatorConfig.timeline.min}
+          max={simulatorConfig.timeline.max}
+          step={simulatorConfig.timeline.step}
+          value={simulatorConfig.timeline.default}
+          aria-label="Timeline slider"
+          aria-valuemin={simulatorConfig.timeline.min}
+          aria-valuemax={simulatorConfig.timeline.max}
+          aria-valuenow={simulatorConfig.timeline.default}
+        />
+        <div class="slider-labels">
+          <span>{simulatorConfig.timeline.min} month</span>
+          <span>{simulatorConfig.timeline.max} months</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Additional Features (Select up to 3)</label>
+        <div class="features-grid" role="group" aria-label="Feature selection">
+          {simulatorConfig.features.map((feature) => (
+            <label class="feature-checkbox">
+              <input 
+                type="checkbox" 
+                class="feature-input"
+                data-feature-id={feature.id}
+                data-multiplier={feature.costMultiplier}
+                data-complexity={feature.complexity}
+                aria-label={feature.label}
+              />
+              <span class="checkbox-label">
+                {feature.label}
+                <span class="complexity-badge" data-complexity={feature.complexity}>
+                  {feature.complexity}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="simulator-output">
+      <div class="output-summary" aria-live="polite" aria-atomic="true">
+        <div class="summary-card">
+          <h3>Estimated Cost</h3>
+          <div class="cost-display" id="total-cost">$20,000</div>
+          <p class="cost-note">Based on your selections</p>
+        </div>
+
+        <div class="summary-card">
+          <h3>Project Timeline</h3>
+          <div class="timeline-display" id="timeline-display">3 months</div>
+          <p class="timeline-note">Estimated completion time</p>
+        </div>
+      </div>
+
+      <!-- 2D Timeline Visualization -->
+      <div class="timeline-visualization">
+        <h3>Project Roadmap</h3>
+        <div class="roadmap-container" id="roadmap-container">
+          <div class="roadmap-bar">
+            <div class="roadmap-phase" data-phase="discovery">
+              <span class="phase-label">Discovery</span>
+              <span class="phase-percent">15%</span>
+            </div>
+            <div class="roadmap-phase" data-phase="design">
+              <span class="phase-label">Design</span>
+              <span class="phase-percent">25%</span>
+            </div>
+            <div class="roadmap-phase" data-phase="development">
+              <span class="phase-label">Development</span>
+              <span class="phase-percent">45%</span>
+            </div>
+            <div class="roadmap-phase" data-phase="launch">
+              <span class="phase-label">Launch</span>
+              <span class="phase-percent">15%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Breakdown Chart -->
+      <div class="cost-breakdown">
+        <h3>Cost Breakdown</h3>
+        <div class="breakdown-chart" id="breakdown-chart">
+          <div class="breakdown-item">
+            <div class="breakdown-bar" style="width: 30%; background: var(--color-primary);"></div>
+            <span class="breakdown-label">Design & Planning</span>
+            <span class="breakdown-value">30%</span>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-bar" style="width: 50%; background: var(--color-accent);"></div>
+            <span class="breakdown-label">Development</span>
+            <span class="breakdown-value">50%</span>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-bar" style="width: 20%; background: var(--color-secondary);"></div>
+            <span class="breakdown-label">Testing & Launch</span>
+            <span class="breakdown-value">20%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Visualization -->
+      <div class="visualization-3d">
+        <h3>Project Visualization</h3>
+        <div class="canvas-container" id="canvas-container">
+          <canvas id="simulator-canvas" aria-label="3D project visualization"></canvas>
+          <div class="canvas-fallback" id="canvas-fallback" style="display: none;">
+            <p>3D visualization not available. Using 2D view.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Notes -->
+      <div class="risk-notes" id="risk-notes">
+        <h3>Project Notes</h3>
+        <ul class="notes-list" id="notes-list">
+          <li>Standard project timeline and budget estimates</li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="simulator-cta">
+        <button type="button" class="btn btn-primary" id="save-quote-btn">
+          Save & Get Quote
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Modal -->
+  <div class="modal" id="contact-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+      <h2 id="modal-title">Get Your Custom Quote</h2>
+      <form id="quote-form" class="quote-form">
+        <div class="form-group">
+          <label for="quote-name">Name <span class="required">*</span></label>
+          <input type="text" id="quote-name" name="name" required aria-required="true" />
+        </div>
+        <div class="form-group">
+          <label for="quote-email">Email <span class="required">*</span></label>
+          <input type="email" id="quote-email" name="email" required aria-required="true" />
+        </div>
+        <div class="form-group">
+          <label for="quote-phone">Phone</label>
+          <input type="tel" id="quote-phone" name="phone" />
+        </div>
+        <div class="form-group">
+          <label for="quote-message">Additional Notes</label>
+          <textarea id="quote-message" name="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Quote Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ servicesDataJSON: JSON.stringify(servicesData) }} type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js';
+  
+  // Parse services data
+  const servicesData = JSON.parse(servicesDataJSON);
+  
+  // onMount equivalent for client-side execution
+  function onMount(callback) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback);
+    } else {
+      callback();
+    }
+  }
+
+  // Debounce utility
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Format currency
+  function formatCurrency(value) {
+    if (value >= 1000) {
+      return `$${(value / 1000).toFixed(value % 1000 === 0 ? 0 : 1)}K`;
+    }
+    return `$${value.toLocaleString()}`;
+  }
+
+  // State management
+  function loadState() {
+    try {
+      const saved = localStorage.getItem('simulator-state');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveState(state) {
+    try {
+      localStorage.setItem('simulator-state', JSON.stringify(state));
+    } catch (e) {
+      console.warn('Could not save state:', e);
+    }
+  }
+
+  onMount(() => {
+    // Get DOM elements
+    const serviceSelect = document.getElementById('service-select');
+    const budgetSlider = document.getElementById('budget-slider');
+    const timelineSlider = document.getElementById('timeline-slider');
+    const budgetValue = document.getElementById('budget-value');
+    const timelineValue = document.getElementById('timeline-value');
+    const totalCost = document.getElementById('total-cost');
+    const timelineDisplay = document.getElementById('timeline-display');
+    const featureInputs = document.querySelectorAll('.feature-input');
+    const saveQuoteBtn = document.getElementById('save-quote-btn');
+    const contactModal = document.getElementById('contact-modal');
+    const modalClose = document.getElementById('modal-close');
+    const quoteForm = document.getElementById('quote-form');
+    const notesList = document.getElementById('notes-list');
+    const canvasContainer = document.getElementById('canvas-container');
+    const canvas = document.getElementById('simulator-canvas');
+    const canvasFallback = document.getElementById('canvas-fallback');
+
+    // Load saved state
+    const savedState = loadState();
+    if (savedState) {
+      if (serviceSelect) serviceSelect.value = savedState.serviceId;
+      if (budgetSlider) budgetSlider.value = String(savedState.budget);
+      if (timelineSlider) timelineSlider.value = String(savedState.timeline);
+      savedState.features.forEach(featureId => {
+        const checkbox = document.querySelector(`[data-feature-id="${featureId}"]`);
+        if (checkbox) checkbox.checked = true;
+      });
+    }
+
+    // Get current service config
+    function getCurrentServiceConfig() {
+      const serviceId = serviceSelect?.value || 'service-1';
+      const service = servicesData.find((s) => s.id === serviceId);
+      return service?.simulatorConfig || {
+        budget: { min: 5000, max: 50000, default: 20000, step: 1000 },
+        timeline: { min: 1, max: 6, default: 3, step: 1 },
+        features: [],
+        baseCost: 10000,
+        timelineFactor: 0.1
+      };
+    }
+
+    // Calculate costs
+    function calculateCost() {
+      const config = getCurrentServiceConfig();
+      const budget = Number(budgetSlider?.value || config.budget.default);
+      const timeline = Number(timelineSlider?.value || config.timeline.default);
+      
+      let baseCost = config.baseCost || budget * 0.5;
+      let featureMultiplier = 1;
+      const notes = [];
+      const selectedFeatures = [];
+
+      // Calculate feature multipliers
+      featureInputs.forEach(input => {
+        if (input.checked) {
+          const multiplier = Number(input.dataset.multiplier || 1);
+          featureMultiplier *= multiplier;
+          const complexity = input.dataset.complexity || '';
+          selectedFeatures.push(input.dataset.featureId || '');
+          if (complexity === 'High' || complexity === 'Very High') {
+            notes.push(`${input.parentElement?.textContent?.trim()} adds ${Math.round((multiplier - 1) * 100)}% complexity`);
+          }
+        }
+      });
+
+      // Timeline factor
+      const timelineAdjustment = timeline > 3 ? 1.1 : timeline < 3 ? 0.9 : 1;
+      
+      // Calculate total
+      const adjustedCost = baseCost * featureMultiplier * timelineAdjustment;
+      const total = Math.min(adjustedCost, budget);
+
+      // Breakdown
+      const breakdown = {
+        design: total * 0.3,
+        development: total * 0.5,
+        testing: total * 0.2
+      };
+
+      if (selectedFeatures.length > 2) {
+        notes.push('Multiple complex features may extend timeline');
+      }
+
+      return { total, breakdown, notes };
+    }
+
+    // Update UI
+    function updateDisplay() {
+      const budget = Number(budgetSlider?.value || 20000);
+      const timeline = Number(timelineSlider?.value || 3);
+      const { total, breakdown, notes } = calculateCost();
+
+      // Update values
+      if (budgetValue) budgetValue.textContent = formatCurrency(budget);
+      if (timelineValue) timelineValue.textContent = `${timeline} month${timeline !== 1 ? 's' : ''}`;
+      if (totalCost) totalCost.textContent = formatCurrency(total);
+      if (timelineDisplay) timelineDisplay.textContent = `${timeline} month${timeline !== 1 ? 's' : ''}`;
+
+      // Update roadmap phases
+      const phases = document.querySelectorAll('.roadmap-phase');
+      const phasePercentages = [15, 25, 45, 15];
+      phases.forEach((phase, i) => {
+        const percentEl = phase.querySelector('.phase-percent');
+        if (percentEl) percentEl.textContent = `${phasePercentages[i]}%`;
+      });
+
+      // Update breakdown
+      const breakdownItems = document.querySelectorAll('.breakdown-item');
+      const percentages = [30, 50, 20];
+      breakdownItems.forEach((item, i) => {
+        const bar = item.querySelector('.breakdown-bar');
+        const value = item.querySelector('.breakdown-value');
+        if (bar) bar.style.width = `${percentages[i]}%`;
+        if (value) value.textContent = `${percentages[i]}%`;
+      });
+
+      // Update notes
+      if (notesList) {
+        notesList.innerHTML = notes.length > 0 
+          ? notes.map(note => `<li>${note}</li>`).join('')
+          : '<li>Standard project timeline and budget estimates</li>';
+      }
+
+      // Update 3D visualization
+      update3DVisualization(total, timeline, breakdown);
+
+      // Save state
+      const selectedFeatures = Array.from(featureInputs)
+        .filter(input => input.checked)
+        .map(input => input.dataset.featureId || '');
+      
+      saveState({
+        serviceId: serviceSelect?.value || 'service-1',
+        budget,
+        timeline,
+        features: selectedFeatures
+      });
+    }
+
+    // 3D Visualization
+    let scene = null;
+    let camera = null;
+    let renderer = null;
+    let animationId = null;
+    let nodes = [];
+
+    function init3D() {
+      if (!canvas || !canvasContainer) return;
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        if (canvasFallback) canvasFallback.style.display = 'block';
+        return;
+      }
+
+      try {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, canvasContainer.offsetWidth / canvasContainer.offsetHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ 
+          canvas, 
+          alpha: true, 
+          antialias: true,
+          powerPreference: "high-performance"
+        });
+        
+        renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0x82e8c8, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        camera.position.z = 8;
+      } catch (e) {
+        console.warn('3D initialization failed:', e);
+        if (canvasFallback) canvasFallback.style.display = 'block';
+      }
+    }
+
+    function update3DVisualization(total, timeline, breakdown) {
+      if (!scene || !camera || !renderer) return;
+
+      // Clear existing nodes
+      nodes.forEach(node => scene?.remove(node));
+      nodes = [];
+
+      const colors = [0x82e8c8, 0x15cfaa, 0x1e3756];
+      const phases = ['Discovery', 'Design', 'Development', 'Launch'];
+      const costs = [breakdown.design, breakdown.development, breakdown.testing, total * 0.1];
+
+      // Create nodes for each phase
+      phases.forEach((phase, i) => {
+        const size = 0.3 + (costs[i] / total) * 0.5;
+        const geometry = new THREE.SphereGeometry(size, 32, 32);
+        const material = new THREE.MeshStandardMaterial({
+          color: colors[i % colors.length],
+          transparent: true,
+          opacity: 0.7,
+          metalness: 0.3,
+          roughness: 0.4
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        const angle = (i / phases.length) * Math.PI * 2;
+        const radius = 3;
+        mesh.position.set(
+          Math.cos(angle) * radius,
+          Math.sin(angle) * radius,
+          (i - phases.length / 2) * 0.5
+        );
+        
+        nodes.push(mesh);
+        scene?.add(mesh);
+      });
+
+      // Animate
+      function animate() {
+        if (!scene || !camera || !renderer) return;
+        
+        animationId = requestAnimationFrame(animate);
+        
+        nodes.forEach((node, i) => {
+          node.rotation.x += 0.01;
+          node.rotation.y += 0.01;
+        });
+
+        // Rotate camera
+        const time = Date.now() * 0.0005;
+        camera.position.x = Math.cos(time) * 2;
+        camera.position.y = Math.sin(time * 0.7) * 2;
+        camera.lookAt(0, 0, 0);
+
+        renderer.render(scene, camera);
+      }
+
+      if (animationId) cancelAnimationFrame(animationId);
+      animate();
+    }
+
+    function handleResize() {
+      if (camera && renderer && canvasContainer) {
+        camera.aspect = canvasContainer.offsetWidth / canvasContainer.offsetHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
+      }
+    }
+
+    // Event listeners
+    const debouncedUpdate = debounce(updateDisplay, 300);
+
+    budgetSlider?.addEventListener('input', (e) => {
+      const value = e.target.value;
+      if (budgetValue) budgetValue.textContent = formatCurrency(Number(value));
+      debouncedUpdate();
+    });
+
+    timelineSlider?.addEventListener('input', (e) => {
+      const value = e.target.value;
+      if (timelineValue) timelineValue.textContent = `${value} month${value !== '1' ? 's' : ''}`;
+      debouncedUpdate();
+    });
+
+    featureInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        const checked = Array.from(featureInputs).filter(i => i.checked).length;
+        if (checked > 3) {
+          input.checked = false;
+          alert('Please select a maximum of 3 features');
+          return;
+        }
+        debouncedUpdate();
+      });
+    });
+
+    serviceSelect?.addEventListener('change', debouncedUpdate);
+
+    // Save & Quote button
+    saveQuoteBtn?.addEventListener('click', async () => {
+      if (!contactModal) return;
+      
+      // Generate PDF (requires jsPDF and html2canvas)
+      try {
+        // Load libraries dynamically from CDN
+        if (!window.jspdf || !window.html2canvas) {
+          await Promise.all([
+            new Promise((resolve, reject) => {
+              if (window.jspdf) return resolve();
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/jspdf@3.0.4/dist/jspdf.umd.min.js';
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            }),
+            new Promise((resolve, reject) => {
+              if (window.html2canvas) return resolve();
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            })
+          ]);
+        }
+        
+        const jsPDF = window.jspdf.jsPDF;
+        const html2canvas = window.html2canvas;
+        
+        const element = document.getElementById('service-simulator');
+        if (element && html2canvas && jsPDF) {
+          const canvas = await html2canvas(element, { scale: 2 });
+          const imgData = canvas.toDataURL('image/png');
+          
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          const imgWidth = 210;
+          const pageHeight = 295;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          // Download PDF
+          pdf.save('hashturn-project-estimate.pdf');
+        }
+      } catch (e) {
+        console.warn('PDF generation failed:', e);
+        // Fallback: show message
+        alert('PDF generation is being set up. Please use the contact form to receive your quote.');
+      }
+
+      // Show modal
+      contactModal.setAttribute('aria-hidden', 'false');
+      contactModal.style.display = 'flex';
+    });
+
+    // Modal close
+    modalClose?.addEventListener('click', () => {
+      if (contactModal) {
+        contactModal.setAttribute('aria-hidden', 'true');
+        contactModal.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    quoteForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(quoteForm);
+      const data = Object.fromEntries(formData);
+
+      // Try EmailJS (requires setup)
+      try {
+        // Uncomment and configure when EmailJS is set up
+        // const emailjs = (await import('@emailjs/browser')).default;
+        // await emailjs.send('service_id', 'template_id', {
+        //   ...data,
+        //   estimate: JSON.stringify(calculateCost())
+        // }, 'public_key');
+        
+        alert('Thank you! Your quote request has been received. We will contact you shortly.');
+        if (contactModal) {
+          contactModal.setAttribute('aria-hidden', 'true');
+          contactModal.style.display = 'none';
+        }
+        quoteForm.reset();
+      } catch (error) {
+        console.warn('Email sending failed:', error);
+        alert('Please email us directly at info@hashturn.com with your project details.');
+      }
+    });
+
+    // Initialize
+    init3D();
+    updateDisplay();
+    window.addEventListener('resize', debounce(handleResize, 250));
+
+    // Cleanup
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      if (renderer) renderer.dispose();
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+</script>
+
+
+<style>
+  .service-simulator {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .simulator-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .simulator-header h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .simulator-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+  }
+
+  .simulator-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  @media (min-width: 1024px) {
+    .simulator-content {
+      grid-template-columns: 400px 1fr;
+    }
+  }
+
+  /* Input Panel */
+  .simulator-inputs {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+  }
+
+  .input-group {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+  }
+
+  .value-display {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  .input-select,
+  .input-slider {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background: var(--color-white);
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+  }
+
+  .input-select:focus,
+  .input-slider:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(21, 207, 170, 0.1);
+  }
+
+  .input-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+    outline: none;
+    padding: 0;
+  }
+
+  .input-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .input-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(21, 207, 170, 0.1);
+  }
+
+  .input-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-top: var(--spacing-xs);
+  }
+
+  .features-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .feature-checkbox {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .feature-checkbox:hover {
+    border-color: var(--color-accent);
+    background: rgba(21, 207, 170, 0.05);
+  }
+
+  .feature-input {
+    margin-right: var(--spacing-sm);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.9375rem;
+  }
+
+  .complexity-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-border);
+    color: var(--color-text-light);
+  }
+
+  .complexity-badge[data-complexity="High"],
+  .complexity-badge[data-complexity="Very High"] {
+    background: rgba(255, 193, 7, 0.2);
+    color: #856404;
+  }
+
+  /* Output Panel */
+  .simulator-output {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .output-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .summary-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .summary-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-light);
+  }
+
+  .cost-display,
+  .timeline-display {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .cost-note,
+  .timeline-note {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .timeline-visualization,
+  .cost-breakdown,
+  .visualization-3d,
+  .risk-notes {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+  }
+
+  .timeline-visualization h3,
+  .cost-breakdown h3,
+  .visualization-3d h3,
+  .risk-notes h3 {
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .roadmap-container {
+    margin-top: var(--spacing-lg);
+  }
+
+  .roadmap-bar {
+    display: flex;
+    height: 60px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .roadmap-phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    color: var(--color-white);
+    transition: all var(--transition-base);
+  }
+
+  .roadmap-phase[data-phase="discovery"] {
+    background: var(--color-primary);
+  }
+
+  .roadmap-phase[data-phase="design"] {
+    background: var(--color-accent);
+  }
+
+  .roadmap-phase[data-phase="development"] {
+    background: var(--color-secondary);
+  }
+
+  .roadmap-phase[data-phase="launch"] {
+    background: var(--color-primary);
+  }
+
+  .phase-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .phase-percent {
+    font-size: 0.75rem;
+    opacity: 0.9;
+  }
+
+  .breakdown-chart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .breakdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .breakdown-bar {
+    height: 32px;
+    border-radius: var(--radius-sm);
+    min-width: 60px;
+    transition: width var(--transition-base);
+  }
+
+  .breakdown-label {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .breakdown-value {
+    font-weight: 700;
+    color: var(--color-accent);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  .canvas-container {
+    width: 100%;
+    height: 400px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.5) 0%, rgba(30, 41, 59, 0.5) 100%);
+    position: relative;
+  }
+
+  #simulator-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .canvas-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-light);
+  }
+
+  .notes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .notes-list li {
+    padding: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+    position: relative;
+    color: var(--color-text-light);
+  }
+
+  .notes-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .simulator-cta {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+  }
+
+  .modal-content {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  [data-theme="dark"] .modal-content {
+    background: var(--gradient-card);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--color-text-light);
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-close:hover {
+    color: var(--color-text);
+  }
+
+  .quote-form {
+    margin-top: var(--spacing-lg);
+  }
+
+  .quote-form .form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .quote-form label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .quote-form input,
+  .quote-form textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: all var(--transition-fast);
+  }
+
+  .quote-form input:focus,
+  .quote-form textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(21, 207, 170, 0.1);
+  }
+
+  @media (max-width: 767px) {
+    .simulator-content {
+      grid-template-columns: 1fr;
+    }
+
+    .simulator-inputs {
+      position: static;
+    }
+
+    .output-summary {
+      grid-template-columns: 1fr;
+    }
+
+    .canvas-container {
+      height: 300px;
+    }
+  }
+</style>
+

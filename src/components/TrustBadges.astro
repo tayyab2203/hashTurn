@@ -1,0 +1,76 @@
+---
+interface Props {
+  badges: Array<{
+    text: string;
+    icon?: string;
+  }>;
+}
+
+const { badges } = Astro.props;
+---
+
+<div class="trust-badges">
+  {badges.map((badge) => (
+    <div class="trust-badge">
+      {badge.icon && <span class="badge-icon">{badge.icon}</span>}
+      <span class="badge-text">{badge.text}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-lg) 0;
+  }
+
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 0.75rem 1.5rem;
+    background: var(--gradient-card);
+    border: 1px solid rgba(21, 207, 170, 0.2);
+    border-radius: var(--radius-full);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .trust-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-accent);
+  }
+
+  .badge-icon {
+    font-size: 1.25rem;
+  }
+
+  .badge-text {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .trust-badges {
+      gap: var(--spacing-sm);
+    }
+
+    .trust-badge {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  [data-theme="dark"] .trust-badge {
+    background: var(--gradient-card);
+    border-color: rgba(21, 207, 170, 0.3);
+  }
+</style>
+

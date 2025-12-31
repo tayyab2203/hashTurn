@@ -1,0 +1,51 @@
+[
+  {
+    "slug": "modern-web-development-best-practices",
+    "title": "Modern Web Development Best Practices for 2024",
+    "description": "Explore the latest trends and best practices in web development, from performance optimization to accessibility standards.",
+    "date": "2024-01-15",
+    "author": "Hashturn Team",
+    "category": "Development",
+    "excerpt": "Web development continues to evolve rapidly. In this article, we explore the key best practices that every developer should know in 2024."
+  },
+  {
+    "slug": "seo-strategies-for-small-businesses",
+    "title": "SEO Strategies for Small Businesses",
+    "description": "Learn how small businesses can compete with larger competitors through effective SEO strategies and local optimization.",
+    "date": "2024-02-01",
+    "author": "Hashturn Team",
+    "category": "SEO",
+    "excerpt": "Small businesses often struggle with SEO, but with the right strategies, you can achieve significant visibility in search results."
+  },
+  {
+    "slug": "building-accessible-websites",
+    "title": "Building Accessible Websites: A Complete Guide",
+    "description": "Comprehensive guide to web accessibility, covering WCAG guidelines, semantic HTML, and inclusive design principles.",
+    "date": "2024-02-20",
+    "author": "Hashturn Team",
+    "category": "Design",
+    "excerpt": "Accessibility isn't optional—it's essential. Learn how to create websites that everyone can use and enjoy."
+  },
+  {
+    "slug": "performance-optimization-techniques",
+    "title": "Website Performance Optimization Techniques",
+    "description": "Discover proven techniques to improve your website's loading speed and overall performance for better user experience.",
+    "date": "2024-03-10",
+    "author": "Hashturn Team",
+    "category": "Development",
+    "excerpt": "Fast websites aren't just nice to have—they're crucial for user retention and SEO. Here's how to optimize your site's performance."
+  },
+  {
+    "slug": "choosing-right-technology-stack",
+    "title": "Choosing the Right Technology Stack for Your Project",
+    "description": "A guide to selecting the best technologies for your web project, considering factors like scalability, team expertise, and project requirements.",
+    "date": "2024-03-25",
+    "author": "Hashturn Team",
+    "category": "Development",
+    "excerpt": "The technology stack you choose can make or break your project. Learn how to make the right decision for your specific needs."
+  }
+]
+
+
+
+

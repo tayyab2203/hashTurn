@@ -1,0 +1,147 @@
+---
+// Professional Scroll to Top Button
+---
+
+<button 
+  id="scroll-to-top" 
+  class="scroll-to-top" 
+  aria-label="Scroll to top"
+  title="Scroll to top"
+  style="display: none;"
+>
+  <svg class="scroll-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+  const initScrollToTop = () => {
+    const button = document.getElementById('scroll-to-top');
+    if (!button) return;
+
+    const updateButton = () => {
+      if (window.scrollY > 400) {
+        button.style.display = 'flex';
+        button.classList.add('visible');
+      } else {
+        button.style.display = 'none';
+        button.classList.remove('visible');
+      }
+    };
+
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    };
+
+    // Throttled scroll handler
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateButton();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    button.addEventListener('click', scrollToTop);
+    updateButton();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollToTop);
+  } else {
+    initScrollToTop();
+  }
+</script>
+
+<style>
+  .scroll-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    color: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(30, 55, 86, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: var(--z-sticky);
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+    border: none;
+    padding: 0;
+  }
+
+  .scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+
+  .scroll-to-top:hover {
+    background: var(--color-accent);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 24px rgba(21, 207, 170, 0.4);
+  }
+
+  .scroll-to-top:active {
+    transform: translateY(-2px) scale(1);
+  }
+
+  .scroll-icon {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  .scroll-to-top:hover .scroll-icon {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 767px) {
+    .scroll-to-top {
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+    }
+
+    .scroll-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  /* Adjust position when WhatsApp button is present */
+  @media (min-width: 768px) {
+    .scroll-to-top {
+      bottom: 32px;
+      right: 32px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-to-top,
+    .scroll-icon {
+      transition: none;
+    }
+    
+    .scroll-to-top.visible {
+      transform: translateY(0);
+    }
+  }
+</style>

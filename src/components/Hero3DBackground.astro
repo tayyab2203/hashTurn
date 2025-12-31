@@ -1,0 +1,287 @@
+---
+// Professional Network/Connection Visualization for RPA & Automation Theme
+---
+
+<div id="hero-3d-background" class="hero-3d-background" aria-hidden="true"></div>
+
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js';
+
+  // Professional network visualization representing automation and workflows
+  const init3DBackground = () => {
+    const container = document.getElementById('hero-3d-background');
+    if (!container) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ 
+      alpha: true, 
+      antialias: true,
+      powerPreference: "high-performance"
+    });
+    
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Network nodes representing automation points
+    const nodes = [];
+    const nodeCount = 20;
+    const connections = [];
+    
+    // Brand colors from design system
+    const nodeColors = [0x82e8c8, 0x15cfaa, 0x1e3756]; // Primary (teal), Accent (teal-green), Secondary (dark blue)
+    
+    // Create network nodes
+    for (let i = 0; i < nodeCount; i++) {
+      const geometry = new THREE.SphereGeometry(0.08, 16, 16);
+      const material = new THREE.MeshStandardMaterial({
+        color: nodeColors[Math.floor(Math.random() * nodeColors.length)],
+        emissive: nodeColors[Math.floor(Math.random() * nodeColors.length)],
+        emissiveIntensity: 0.3,
+        metalness: 0.7,
+        roughness: 0.3
+      });
+      
+      const node = new THREE.Mesh(geometry, material);
+      
+      // Distribute nodes in 3D space
+      const angle = (i / nodeCount) * Math.PI * 2;
+      const radius = 4 + Math.random() * 3;
+      const height = (Math.random() - 0.5) * 4;
+      
+      node.position.set(
+        Math.cos(angle) * radius,
+        height,
+        Math.sin(angle) * radius
+      );
+      
+      node.userData = {
+        basePosition: node.position.clone(),
+        speed: 0.3 + Math.random() * 0.2,
+        amplitude: 0.5 + Math.random() * 0.3
+      };
+      
+      nodes.push(node);
+      scene.add(node);
+    }
+
+    // Create connections between nearby nodes (representing workflow connections)
+    const connectionGeometry = new THREE.BufferGeometry();
+    const connectionMaterial = new THREE.LineBasicMaterial({
+      color: 0x15cfaa, // Accent color
+      transparent: true,
+      opacity: 0.2,
+      linewidth: 1
+    });
+
+    // Connect nodes that are close to each other
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const distance = nodes[i].position.distanceTo(nodes[j].position);
+        if (distance < 5) {
+          connections.push({ start: nodes[i], end: nodes[j] });
+        }
+      }
+    }
+
+    // Create animated connection lines
+      const connectionLines = [];
+    connections.forEach(({ start, end }) => {
+      const points = [
+        start.position.clone(),
+        end.position.clone()
+      ];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const line = new THREE.Line(geometry, connectionMaterial);
+      connectionLines.push(line);
+      scene.add(line);
+    });
+
+    // Flowing particles along connections (representing data/workflow)
+    const particles = [];
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const geometry = new THREE.SphereGeometry(0.03, 8, 8);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x15cfaa, // Accent color
+        transparent: true,
+        opacity: 0.8
+      });
+      
+      const particle = new THREE.Mesh(geometry, material);
+      
+      // Assign particle to a random connection
+      const connectionIndex = Math.floor(Math.random() * connections.length);
+      particle.userData = {
+        connectionIndex,
+        progress: Math.random(), // 0 to 1 along the connection
+        speed: 0.3 + Math.random() * 0.2
+      };
+      
+      particles.push(particle);
+      scene.add(particle);
+    }
+
+    // Lighting setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
+
+    const pointLight1 = new THREE.PointLight(0x82e8c8, 0.6, 20); // Primary color
+    pointLight1.position.set(5, 5, 5);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0x15cfaa, 0.5, 20); // Accent color
+    pointLight2.position.set(-5, -5, -5);
+    scene.add(pointLight2);
+
+    // Camera position
+    camera.position.set(0, 0, 12);
+    camera.lookAt(0, 0, 0);
+
+    // Mouse interaction
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    
+    const handleMouseMove = (event) => {
+      targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+
+    let time = 0;
+    
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+      time += 0.01;
+
+      // Smooth mouse interpolation
+      mouseX += (targetMouseX - mouseX) * 0.03;
+      mouseY += (targetMouseY - mouseY) * 0.03;
+
+      // Animate nodes with floating motion
+      nodes.forEach((node, index) => {
+        const { basePosition, speed, amplitude } = node.userData;
+        node.position.y = basePosition.y + Math.sin(time * speed + index) * amplitude;
+        node.position.x = basePosition.x + Math.cos(time * speed * 0.7 + index) * amplitude * 0.5;
+        
+        // Subtle mouse interaction
+        node.position.x += mouseX * 0.3;
+        node.position.y += mouseY * 0.3;
+        
+        // Pulsing effect
+        const scale = 1 + Math.sin(time * 2 + index) * 0.1;
+        node.scale.set(scale, scale, scale);
+      });
+
+      // Update connection lines
+      connectionLines.forEach((line, index) => {
+        const connection = connections[index];
+        if (connection) {
+          const points = [
+            connection.start.position.clone(),
+            connection.end.position.clone()
+          ];
+          line.geometry.setFromPoints(points);
+          
+          // Animate connection opacity
+          const distance = connection.start.position.distanceTo(connection.end.position);
+          if (line.material) line.material.opacity = 0.1 + (1 - distance / 5) * 0.2;
+        }
+      });
+
+      // Animate particles along connections
+      particles.forEach((particle) => {
+        const { connectionIndex, speed } = particle.userData;
+        if (connectionIndex < connections.length) {
+          const connection = connections[connectionIndex];
+          particle.userData.progress += speed * 0.01;
+          
+          if (particle.userData.progress > 1) {
+            particle.userData.progress = 0;
+            // Optionally reassign to new connection
+            particle.userData.connectionIndex = Math.floor(Math.random() * connections.length);
+          }
+          
+          // Interpolate position along connection
+          const start = connection.start.position;
+          const end = connection.end.position;
+          particle.position.lerpVectors(start, end, particle.userData.progress);
+          
+          // Fade in/out effect
+          const opacity = Math.sin(particle.userData.progress * Math.PI);
+          if (particle.material) particle.material.opacity = opacity * 0.8;
+        }
+      });
+
+      // Camera rotation with mouse interaction
+      camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+      camera.position.y += (mouseY * 2 - camera.position.y) * 0.05;
+      
+      // Subtle orbital rotation
+      const angle = time * 0.1;
+      camera.position.x = Math.cos(angle) * 0.5;
+      camera.position.z = 12 + Math.sin(angle) * 0.5;
+      camera.lookAt(0, 0, 0);
+
+      renderer.render(scene, camera);
+    };
+
+    // Handle resize
+    const handleResize = () => {
+      camera.aspect = container.offsetWidth / container.offsetHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Start animation
+    animate();
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+      renderer.dispose();
+    };
+  };
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  // Only initialize if user doesn't prefer reduced motion
+  if (!prefersReducedMotion) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init3DBackground);
+    } else {
+      init3DBackground();
+    }
+  }
+</script>
+
+<style>
+  .hero-3d-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero-3d-background canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+  }
+</style>

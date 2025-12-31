@@ -1,0 +1,224 @@
+---
+// Tech Playground for Non-Technical Users
+// Interactive component to explore technologies visually
+---
+
+<section class="tech-playground section">
+  <div class="container">
+    <div class="playground-header">
+      <span class="section-label">Tech Playground</span>
+      <h2>Explore Technologies Visually</h2>
+      <p>Not technical? No problem! Explore our tech stack through interactive visualizations</p>
+    </div>
+
+    <div class="playground-content">
+      <div class="tech-categories">
+        <button class="tech-category active" data-category="all">All Technologies</button>
+        <button class="tech-category" data-category="frontend">Frontend</button>
+        <button class="tech-category" data-category="backend">Backend</button>
+        <button class="tech-category" data-category="database">Database</button>
+        <button class="tech-category" data-category="tools">Tools</button>
+      </div>
+
+      <div class="tech-grid" id="tech-grid">
+        <!-- Technologies will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const technologies = [
+    { name: 'React', category: 'frontend', icon: '⚛️', description: 'User interface library', color: '#61DAFB' },
+    { name: 'Vue.js', category: 'frontend', icon: '🟢', description: 'Progressive framework', color: '#4FC08D' },
+    { name: 'Next.js', category: 'frontend', icon: '▲', description: 'React framework', color: '#000000' },
+    { name: 'Astro', category: 'frontend', icon: '✨', description: 'Static site generator', color: '#FF5D01' },
+    { name: 'TypeScript', category: 'frontend', icon: '📘', description: 'Typed JavaScript', color: '#3178C6' },
+    { name: 'Node.js', category: 'backend', icon: '🟢', description: 'Server runtime', color: '#339933' },
+    { name: 'Python', category: 'backend', icon: '🐍', description: 'Programming language', color: '#3776AB' },
+    { name: 'Django', category: 'backend', icon: '🎸', description: 'Web framework', color: '#092E20' },
+    { name: 'PostgreSQL', category: 'database', icon: '🐘', description: 'Database system', color: '#336791' },
+    { name: 'MongoDB', category: 'database', icon: '🍃', description: 'NoSQL database', color: '#47A248' },
+    { name: 'Firebase', category: 'database', icon: '🔥', description: 'Cloud platform', color: '#FFCA28' },
+    { name: 'AWS', category: 'tools', icon: '☁️', description: 'Cloud services', color: '#FF9900' },
+    { name: 'Docker', category: 'tools', icon: '🐳', description: 'Containerization', color: '#2496ED' },
+    { name: 'Git', category: 'tools', icon: '📦', description: 'Version control', color: '#F05032' },
+  ];
+
+  const initTechPlayground = () => {
+    const grid = document.getElementById('tech-grid');
+    const categories = document.querySelectorAll('.tech-category');
+    
+    if (!grid) return;
+
+    const renderTech = (category = 'all') => {
+      grid.innerHTML = '';
+      const filtered = category === 'all' 
+        ? technologies 
+        : technologies.filter(t => t.category === category);
+
+      filtered.forEach(tech => {
+        const techCard = document.createElement('div');
+        techCard.className = 'tech-card';
+        techCard.style.setProperty('--tech-color', tech.color);
+        techCard.innerHTML = `
+          <div class="tech-icon">${tech.icon}</div>
+          <h3 class="tech-name">${tech.name}</h3>
+          <p class="tech-description">${tech.description}</p>
+          <div class="tech-color-bar"></div>
+        `;
+        grid.appendChild(techCard);
+      });
+    };
+
+    categories.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categories.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTech(btn.dataset.category);
+      });
+    });
+
+    renderTech();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTechPlayground);
+  } else {
+    initTechPlayground();
+  }
+</script>
+
+<style>
+  .tech-playground {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .playground-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .playground-header h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+  }
+
+  .playground-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .tech-categories {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .tech-category {
+    padding: 0.75rem 1.5rem;
+    background: var(--gradient-card);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+  }
+
+  .tech-category:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .tech-category.active {
+    background: var(--gradient-primary);
+    border-color: var(--color-accent);
+    color: var(--color-white);
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .tech-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .tech-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--tech-color, var(--color-accent));
+  }
+
+  .tech-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+    line-height: 1;
+  }
+
+  .tech-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text);
+  }
+
+  .tech-description {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .tech-color-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--tech-color, var(--color-accent));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+  }
+
+  .tech-card:hover .tech-color-bar {
+    transform: scaleX(1);
+  }
+
+  @media (max-width: 767px) {
+    .tech-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .tech-category {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+</style>
+
+
+
+

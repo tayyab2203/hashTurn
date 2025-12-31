@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import ParticlesBackground from '../components/ParticlesBackground.astro';
+
+import testimonialsData from '../data/testimonials.json';
+---
+
+<BaseLayout
+  title="Client Testimonials - Hashturn"
+  description="Read what our clients say about working with Hashturn. Real feedback from businesses we've helped succeed online."
+  canonical="/testimonials"
+>
+  <section class="testimonials-page section">
+    <ParticlesBackground />
+    <div class="container">
+      <header class="page-header">
+        <span class="section-label">Testimonials</span>
+        <h1>What Our Clients Say</h1>
+        <p class="page-intro">
+          Don't just take our word for it. Here's what our clients have to say about 
+          working with Hashturn. We're proud of the relationships we've built and 
+          the results we've achieved together.
+        </p>
+      </header>
+
+      <div class="testimonials-grid">
+        {testimonialsData.map((testimonial) => (
+          <TestimonialCard
+            clientName={testimonial.clientName}
+            companyName={testimonial.companyName}
+            feedback={testimonial.feedback}
+            rating={testimonial.rating}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .testimonials-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  [data-theme="dark"] .testimonials-page {
+    background: var(--color-white);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+

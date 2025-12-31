@@ -1,0 +1,420 @@
+---
+const currentPath = Astro.url.pathname;
+const navItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Services', path: '/services' },
+  { label: 'Work', path: '/work' },
+  { label: 'Testimonials', path: '/testimonials' },
+  { label: 'Insights', path: '/insights' },
+  { label: 'Company', path: '/company' },
+  { label: 'Contact', path: '/contact' },
+];
+
+const isActive = (path: string) => {
+  if (path === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(path);
+};
+
+// WhatsApp configuration
+const whatsappNumber = "+1234567890";
+const whatsappMessage = "Hello! I'm interested in learning more about Hashturn's services.";
+const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
+---
+
+<script>
+  // Add scroll effect to navbar
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+  }
+</script>
+
+<header>
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container">
+      <div class="navbar-content">
+        <a href="/" class="navbar-logo" aria-label="Hashturn Home">
+          <img src="/images/logo.png" alt="Hashturn Logo" class="logo-image" width="40" height="40" />
+          <span class="logo-text">Hashturn</span>
+        </a>
+        
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation menu" />
+        <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+        
+        <ul class="nav-menu">
+          {navItems.map((item) => (
+            <li>
+              <a 
+                href={item.path}
+                class={isActive(item.path) ? 'nav-link active' : 'nav-link'}
+                aria-current={isActive(item.path) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li class="nav-whatsapp">
+            <a 
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="nav-link nav-link-whatsapp"
+              aria-label="Contact us on WhatsApp"
+              title="Chat with us on WhatsApp"
+            >
+              <svg class="whatsapp-icon-nav" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="currentColor"/>
+              </svg>
+              <span class="whatsapp-text">Chat</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(30, 55, 86, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+  }
+
+  .navbar.scrolled {
+    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  [data-theme="dark"] .navbar {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .navbar.scrolled {
+    background: rgba(15, 23, 42, 0.98);
+  }
+
+  .navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) 0;
+  }
+
+  /* Logo Container - Flexbox layout with overflow hidden to prevent layout shift */
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    overflow: visible; /* Allow logo to slide without clipping */
+    position: relative;
+    padding-left: 8px; /* Add padding to accommodate left slide */
+    margin-left: -8px; /* Offset padding to maintain alignment */
+  }
+
+  .navbar-logo:hover {
+    text-decoration: none;
+  }
+
+  /* Logo Image - Default visible, slides left on hover */
+  .logo-image {
+    display: block;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0; /* Prevent image from shrinking */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    will-change: transform; /* Performance optimization */
+  }
+
+  /* Logo Image - Slides left on hover */
+  .navbar-logo:hover .logo-image {
+    transform: translateX(-8px);
+  }
+
+  /* Logo Text - Hidden by default, fades and slides in on hover */
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    white-space: nowrap; /* Prevent text wrapping */
+    
+    /* Initial state: hidden and positioned to the left */
+    opacity: 0;
+    transform: translateX(-12px);
+    max-width: 0; /* Collapse width to prevent layout shift */
+    overflow: hidden;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, max-width; /* Performance optimization */
+    flex-shrink: 0; /* Prevent text from shrinking */
+  }
+
+  /* Logo Text - Visible and slides in on hover */
+  .navbar-logo:hover .logo-text {
+    opacity: 1;
+    transform: translateX(0);
+    max-width: 200px; /* Expand to accommodate text (adjust if needed) */
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+                max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s; /* Slight delay for smooth reveal */
+  }
+
+  /* Mobile: Simplified animation, text always visible for better UX */
+  @media (max-width: 767px) {
+    .navbar-logo {
+      padding-left: 0;
+      margin-left: 0;
+    }
+
+    .logo-text {
+      opacity: 1; /* Always visible on mobile */
+      transform: translateX(0);
+      max-width: 200px;
+      font-size: 1.25rem;
+    }
+
+    .logo-image {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Disable hover animations on mobile (touch devices) */
+    .navbar-logo:hover .logo-image {
+      transform: none;
+    }
+
+    .navbar-logo:hover .logo-text {
+      opacity: 1;
+      transform: translateX(0);
+      max-width: 200px;
+    }
+  }
+
+  /* Reduced motion support for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-image,
+    .logo-text {
+      transition: none;
+    }
+
+    .navbar-logo:hover .logo-image {
+      transform: none;
+    }
+
+    .navbar-logo:hover .logo-text {
+      opacity: 1;
+      transform: translateX(0);
+      width: auto;
+    }
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav-toggle-label {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+  }
+
+  .nav-toggle-label span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-text);
+    transition: all var(--transition-fast);
+  }
+
+  [data-theme="dark"] .nav-toggle-label span {
+    background-color: var(--color-text);
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+    list-style: none;
+  }
+
+  .nav-link {
+    color: var(--color-text);
+    font-weight: 500;
+    padding: var(--spacing-xs) 0;
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .nav-link.active {
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .nav-link {
+    color: var(--color-text);
+  }
+
+  [data-theme="dark"] .nav-link:hover,
+  [data-theme="dark"] .nav-link:focus {
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .nav-link.active {
+    color: var(--color-accent);
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+  }
+
+  .nav-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .nav-whatsapp {
+    margin-left: var(--spacing-sm);
+  }
+
+  .nav-link-whatsapp {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: #25D366;
+    color: white !important;
+    padding: var(--spacing-xs) var(--spacing-md) !important;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+  }
+
+  .nav-link-whatsapp:hover {
+    background: #20BA5A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  }
+
+  .whatsapp-icon-nav {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .whatsapp-text {
+    font-weight: 600;
+  }
+
+  @media (max-width: 767px) {
+    .nav-link-whatsapp {
+      justify-content: center;
+    }
+
+    .whatsapp-text {
+      display: none;
+    }
+
+    .whatsapp-icon-nav {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  /* Mobile Navigation */
+  @media (max-width: 767px) {
+    .nav-toggle-label {
+      display: flex;
+    }
+
+    .nav-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--color-white);
+      flex-direction: column;
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-base);
+      gap: 0;
+    }
+
+    [data-theme="dark"] .nav-menu {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .nav-menu li {
+      width: 100%;
+    }
+
+    .nav-link {
+      display: block;
+      padding: var(--spacing-sm);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav-link:last-child {
+      border-bottom: none;
+    }
+
+    .nav-toggle:checked ~ .nav-menu {
+      max-height: 500px;
+    }
+
+    .nav-toggle:checked ~ .nav-toggle-label span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .nav-toggle:checked ~ .nav-toggle-label span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle:checked ~ .nav-toggle-label span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+  }
+</style>
+

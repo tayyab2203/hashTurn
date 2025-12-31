@@ -1,0 +1,41 @@
+[
+  {
+    "id": "testimonial-1",
+    "clientName": "Sarah Johnson",
+    "companyName": "TechStart Inc.",
+    "feedback": "Hashturn transformed our online presence completely. Their attention to detail and technical expertise exceeded our expectations. The new website has significantly improved our user engagement and conversion rates.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-2",
+    "clientName": "Michael Chen",
+    "companyName": "Global Solutions",
+    "feedback": "Working with Hashturn was a game-changer for our business. They delivered a beautiful, functional website on time and within budget. Their team is professional, responsive, and truly understands modern web development.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-3",
+    "clientName": "Emily Rodriguez",
+    "companyName": "Creative Agency",
+    "feedback": "The team at Hashturn brought our vision to life. Their design skills combined with technical excellence created a website that perfectly represents our brand. We couldn't be happier with the results.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-4",
+    "clientName": "David Thompson",
+    "companyName": "Innovate Labs",
+    "feedback": "Hashturn's approach to SEO and performance optimization is outstanding. Our website now loads faster, ranks better, and provides an excellent user experience across all devices.",
+    "rating": 5
+  },
+  {
+    "id": "testimonial-5",
+    "clientName": "Lisa Anderson",
+    "companyName": "Retail Plus",
+    "feedback": "The e-commerce solution Hashturn built for us has revolutionized our online sales. The platform is intuitive, secure, and has all the features we need. Our revenue has increased significantly since launch.",
+    "rating": 5
+  }
+]
+
+
+
+

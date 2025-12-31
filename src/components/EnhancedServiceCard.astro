@@ -1,0 +1,332 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  features?: string[];
+}
+
+const { title, description, icon, features } = Astro.props;
+
+// Map icon names to types
+const getIconType = (iconName: string): string => {
+  const iconMap: Record<string, string> = {
+    '💻': 'web',
+    '🎨': 'design',
+    '📈': 'seo',
+    '🚀': 'strategy',
+    '🛒': 'ecommerce',
+    '✨': 'brand',
+    'web': 'web',
+    'design': 'design',
+    'seo': 'seo',
+    'strategy': 'strategy',
+    'ecommerce': 'ecommerce',
+    'brand': 'brand'
+  };
+  
+  return iconMap[iconName] || iconMap[iconName?.toLowerCase() || ''] || 'web';
+};
+
+const iconType = icon ? getIconType(icon) : 'web';
+---
+
+<article class="enhanced-service-card group">
+  <!-- Card Background -->
+  <div class="card-background"></div>
+  
+  <!-- Card Content -->
+  <div class="card-content">
+    <!-- Icon Section -->
+    {icon && (
+      <div class="icon-container">
+        <div class="icon-wrapper">
+          {iconType === 'web' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M3 9h18M9 3v6M15 3v6" stroke="currentColor" stroke-width="2"/>
+              <path d="M6 15h2M11 15h2M16 15h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          )}
+          {iconType === 'design' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            </svg>
+          )}
+          {iconType === 'seo' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h6v6h-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 9h6M9 15h6M9 9v6M15 9v6" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          )}
+          {iconType === 'strategy' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            </svg>
+          )}
+          {iconType === 'ecommerce' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 6h18M9 10a3 3 0 106 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="19" r="1" fill="currentColor"/>
+              <circle cx="20" cy="19" r="1" fill="currentColor"/>
+            </svg>
+          )}
+          {iconType === 'brand' && (
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          )}
+        </div>
+      </div>
+    )}
+    
+    <!-- Title -->
+    <h3 class="card-title">{title}</h3>
+    
+    <!-- Description -->
+    <p class="card-description">{description}</p>
+    
+    <!-- Features List -->
+    {features && features.length > 0 && (
+      <ul class="features-list">
+        {features.map((feature) => (
+          <li class="feature-item">
+            <svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="feature-text">{feature}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+    
+    <!-- Learn More Link -->
+    <div class="card-footer">
+      <a href="/services" class="learn-more-link">
+        <span>Learn More</span>
+        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .enhanced-service-card {
+    position: relative;
+    background: var(--color-secondary);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-base);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .enhanced-service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(21, 207, 170, 0.05) 0%, rgba(130, 232, 200, 0.03) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .enhanced-service-card:hover .card-background {
+    opacity: 1;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Icon Section */
+  .icon-container {
+    margin-bottom: 24px;
+  }
+
+  .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .service-icon {
+    width: 100%;
+    height: 100%;
+    color: var(--color-white);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform var(--transition-base);
+  }
+
+  .enhanced-service-card:hover .service-icon {
+    transform: scale(1.1);
+    color: var(--color-primary);
+  }
+
+  /* Title */
+  .card-title {
+    font-size: 28px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  /* Description */
+  .card-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+  }
+
+  /* Features List */
+  .features-list {
+    list-style: none;
+    margin: 0 0 24px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all var(--transition-fast);
+  }
+
+  .enhanced-service-card:hover .feature-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(21, 207, 170, 0.3);
+    transform: translateX(4px);
+  }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-accent);
+  }
+
+  .feature-text {
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+  }
+
+  /* Footer & Learn More Link */
+  .card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .learn-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-accent);
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .learn-more-link:hover {
+    color: var(--color-primary);
+    gap: 12px;
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-fast);
+  }
+
+  .learn-more-link:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .enhanced-service-card {
+      padding: 24px;
+    }
+
+    .card-title {
+      font-size: 24px;
+    }
+
+    .icon-wrapper {
+      width: 56px;
+      height: 56px;
+    }
+
+    .card-description {
+      font-size: 14px;
+    }
+
+    .feature-item {
+      padding: 8px 12px;
+    }
+
+    .feature-text {
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .enhanced-service-card {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 22px;
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .enhanced-service-card,
+    .service-icon,
+    .feature-item,
+    .learn-more-link,
+    .arrow-icon {
+      transition: none !important;
+    }
+
+    .enhanced-service-card:hover {
+      transform: translateY(-4px) !important;
+    }
+  }
+</style>

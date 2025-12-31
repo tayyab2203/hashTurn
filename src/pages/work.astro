@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Project3DCard from '../components/Project3DCard.astro';
+import TechPlayground from '../components/TechPlayground.astro';
+
+import projectsData from '../data/projects.json';
+---
+
+<BaseLayout
+  title="Our Work - Project Showcase | Hashturn"
+  description="Explore our portfolio of successful projects across various industries. See how we've helped businesses transform their digital presence."
+  canonical="/work"
+>
+  <section class="work-page section">
+    <div class="container">
+      <header class="page-header">
+        <h1>Our Work</h1>
+        <p class="page-intro">
+          Discover our portfolio of successful projects. Each project represents our commitment 
+          to excellence, innovation, and delivering results that matter.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        {projectsData.map((project) => (
+          <Project3DCard
+            name={project.name}
+            description={project.description}
+            techStack={project.techStack}
+            industry={project.industry}
+            thumbnail={project.thumbnail}
+            externalLink={project.externalLink}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Playground Section -->
+  <TechPlayground />
+</BaseLayout>
+
+<style>
+  .work-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .work-page {
+    background: var(--color-white);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+</style>
+

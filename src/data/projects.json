@@ -1,0 +1,57 @@
+[
+  {
+    "id": "project-1",
+    "name": "E-commerce Platform Redesign",
+    "description": "Complete redesign and rebuild of a major e-commerce platform, resulting in 40% increase in conversion rates and improved user experience.",
+    "techStack": ["React", "Node.js", "PostgreSQL", "Stripe API"],
+    "industry": "E-commerce",
+    "thumbnail": "/images/placeholder-project-1.svg",
+    "externalLink": "https://example.com"
+  },
+  {
+    "id": "project-2",
+    "name": "SaaS Dashboard Application",
+    "description": "Enterprise-level dashboard application with real-time analytics, user management, and comprehensive reporting features.",
+    "techStack": ["Vue.js", "Python", "Django", "Redis"],
+    "industry": "SaaS",
+    "thumbnail": "/images/placeholder-project-2.svg",
+    "externalLink": "https://example.com"
+  },
+  {
+    "id": "project-3",
+    "name": "Healthcare Portal",
+    "description": "Secure patient portal with appointment scheduling, medical records access, and telemedicine integration.",
+    "techStack": ["Next.js", "TypeScript", "MongoDB", "AWS"],
+    "industry": "Healthcare",
+    "thumbnail": "/images/placeholder-project-3.svg",
+    "externalLink": "https://example.com"
+  },
+  {
+    "id": "project-4",
+    "name": "FinTech Mobile App",
+    "description": "Mobile-first financial application with secure transactions, budgeting tools, and investment tracking capabilities.",
+    "techStack": ["React Native", "Node.js", "PostgreSQL", "Plaid API"],
+    "industry": "FinTech",
+    "thumbnail": "/images/placeholder-project-4.svg",
+    "externalLink": "https://example.com"
+  },
+  {
+    "id": "project-5",
+    "name": "Education Platform",
+    "description": "Comprehensive learning management system with course creation, student tracking, and interactive assessments.",
+    "techStack": ["Astro", "React", "Firebase", "Stripe"],
+    "industry": "Education",
+    "thumbnail": "/images/placeholder-project-5.svg",
+    "externalLink": "https://example.com"
+  },
+  {
+    "id": "project-6",
+    "name": "Real Estate Marketplace",
+    "description": "Property listing platform with advanced search, virtual tours, and agent management features.",
+    "techStack": ["Next.js", "TypeScript", "PostgreSQL", "Mapbox"],
+    "industry": "Real Estate",
+    "thumbnail": "/images/placeholder-project-6.svg",
+    "externalLink": "https://example.com"
+  }
+]
+

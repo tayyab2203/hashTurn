@@ -1,0 +1,101 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<article class="service-card group">
+  <!-- Card Background -->
+  <div class="card-background"></div>
+  
+  <!-- Card Content -->
+  <div class="card-content">
+    <h3 class="service-card-title">{title}</h3>
+    <p class="service-card-description">{description}</p>
+  </div>
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    background: var(--color-secondary);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(21, 207, 170, 0.05) 0%, rgba(130, 232, 200, 0.03) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .service-card:hover .card-background {
+    opacity: 1;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .service-card-title {
+    color: var(--color-white);
+    font-size: 24px;
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .service-card-description {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+    flex-grow: 1;
+    font-size: 15px;
+  }
+
+  @media (max-width: 768px) {
+    .service-card {
+      padding: 24px;
+    }
+
+    .service-card-title {
+      font-size: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      transition: none !important;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px) !important;
+    }
+  }
+</style>
+
+
+
+

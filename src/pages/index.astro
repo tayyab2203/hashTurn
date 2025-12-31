@@ -1,0 +1,470 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import EnhancedServiceCard from '../components/EnhancedServiceCard.astro';
+import Project3DCard from '../components/Project3DCard.astro';
+import TestimonialsCarousel from '../components/TestimonialsCarousel.astro';
+import Hero3DBackground from '../components/Hero3DBackground.astro';
+import ParticlesBackground from '../components/ParticlesBackground.astro';
+import StatsSection from '../components/StatsSection.astro';
+import TrustBadges from '../components/TrustBadges.astro';
+import WhyChooseUs from '../components/WhyChooseUs.astro';
+
+import servicesData from '../data/services.json';
+import projectsData from '../data/projects.json';
+import testimonialsData from '../data/testimonials.json';
+
+// Get preview items
+const featuredServices = servicesData.slice(0, 4);
+const featuredProjects = projectsData.slice(0, 3);
+
+// Service icons mapping
+const serviceIcons: Record<string, string> = {
+  'Web Development': '💻',
+  'UI/UX Design': '🎨',
+  'SEO Optimization': '📈',
+  'Digital Strategy': '🚀',
+  'E-commerce Solutions': '🛒',
+  'Brand Identity': '✨'
+};
+
+// Service features
+const serviceFeatures: Record<string, string[]> = {
+  'Web Development': ['Custom Solutions', 'Modern Frameworks', 'Performance Optimized', 'Scalable Architecture'],
+  'UI/UX Design': ['User Research', 'Prototyping', 'Design Systems', 'Accessibility First'],
+  'SEO Optimization': ['Keyword Research', 'Technical SEO', 'Content Strategy', 'Analytics Setup'],
+  'Digital Strategy': ['Market Analysis', 'Growth Planning', 'ROI Optimization', 'Competitive Edge']
+};
+
+const stats = [
+  { number: '150', label: 'Projects Delivered', suffix: '+' },
+  { number: '98', label: 'Client Satisfaction', suffix: '%' },
+  { number: '50', label: 'Team Members', suffix: '+' },
+  { number: '10', label: 'Years Experience', suffix: '+' }
+];
+
+const trustBadges = [
+  { text: '✓ Trusted by 150+ Companies', icon: '🏆' },
+  { text: '✓ 98% Client Satisfaction', icon: '⭐' },
+  { text: '✓ Award-Winning Designs', icon: '🎖️' },
+  { text: '✓ 24/7 Support', icon: '💬' }
+];
+---
+
+<BaseLayout
+  title="Hashturn - Modern Web Development & Digital Solutions"
+  description="Hashturn delivers exceptional digital experiences with modern technology, creative design, and strategic solutions. Transform your online presence today."
+  canonical="/"
+>
+  <!-- Hero Section -->
+  <section class="hero section">
+    <Hero3DBackground />
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Providing automation services for businesses with
+          <span class="text-highlight">RPA Tools + APIs</span>
+        </h1>
+        <p class="hero-description">
+          HashTurn is a modern, production-ready digital solutions provider specializing in Web Development and RPA Solutions. Perfect for startups, enterprises, and growing businesses looking to build scalable applications, automate workflows, and embrace innovation.
+        </p>
+        <div class="hero-cta">
+          <a href="/contact" class="btn btn-primary btn-large">Get Quote</a>
+          <a href="/services" class="btn btn-secondary-outline btn-large">Learn more</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <StatsSection stats={stats} />
+
+  <!-- Services Preview -->
+  <section class="services-preview section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Our Services</span>
+        <h2>Comprehensive Digital Solutions</h2>
+        <p>Tailored to your business needs with cutting-edge technology and creative excellence</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        {featuredServices.map((service) => (
+          <EnhancedServiceCard
+            title={service.title}
+            description={service.description}
+            icon={serviceIcons[service.title] || '✨'}
+            features={serviceFeatures[service.title]}
+          />
+        ))}
+      </div>
+      <div class="section-footer text-center">
+        <a href="/services" class="btn btn-secondary">Explore All Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Work -->
+  <section class="work-preview section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Portfolio</span>
+        <h2>Featured Work</h2>
+        <p>Explore some of our recent projects and success stories that drive real results</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        {featuredProjects.map((project) => (
+          <Project3DCard
+            name={project.name}
+            description={project.description}
+            techStack={project.techStack}
+            industry={project.industry}
+            thumbnail={project.thumbnail}
+            externalLink={project.externalLink}
+          />
+        ))}
+      </div>
+      <div class="section-footer text-center">
+        <a href="/work" class="btn btn-secondary">View All Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <WhyChooseUs />
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="testimonials-preview section">
+    <ParticlesBackground />
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Testimonials</span>
+        <h2>What Our Clients Say</h2>
+        <p>Trusted by businesses across industries worldwide</p>
+      </div>
+      <div class="testimonials-carousel-container">
+        <TestimonialsCarousel />
+      </div>
+      <div class="section-footer text-center">
+        <a href="/testimonials" class="btn btn-secondary">View All Testimonials</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Transform Your Digital Presence?</h2>
+        <p>Join 150+ companies that trust Hashturn for their digital success. Let's discuss how we can help you achieve your goals.</p>
+        <div class="cta-buttons">
+          <a href="/contact" class="btn btn-large">Start Your Project</a>
+          <a href="tel:+1234567890" class="btn btn-outline btn-large">Call Us Now</a>
+        </div>
+        <div class="cta-guarantee">
+          <span class="guarantee-icon">✓</span>
+          <span>100% Satisfaction Guarantee • Free Consultation • No Hidden Fees</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, rgba(130, 232, 200, 0.1) 0%, rgba(21, 207, 170, 0.15) 50%, rgba(130, 232, 200, 0.08) 100%);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    padding: var(--spacing-3xl) 0;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+  }
+
+  [data-theme="dark"] .hero {
+    background: linear-gradient(135deg, rgba(130, 232, 200, 0.08) 0%, rgba(21, 207, 170, 0.12) 50%, rgba(15, 23, 42, 0.9) 100%);
+  }
+
+  [data-theme="dark"] .hero-title {
+    color: var(--color-white);
+  }
+
+  [data-theme="dark"] .hero-description {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  [data-theme="dark"] .btn-secondary-outline {
+    color: var(--color-white);
+    border-color: var(--color-white);
+  }
+
+  [data-theme="dark"] .btn-secondary-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    border-color: var(--color-white);
+  }
+
+  .hero-content {
+    max-width: 900px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-secondary);
+  }
+
+  .text-highlight {
+    color: var(--color-accent);
+    font-weight: 800;
+    display: inline-block;
+  }
+
+  .hero-description {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-2xl);
+    line-height: 1.7;
+    max-width: 800px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-xl);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-white);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-secondary-outline {
+    background: transparent;
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-secondary-outline:hover {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    border-color: var(--color-secondary);
+    transform: translateY(-2px);
+  }
+
+  .section-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-header h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .section-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .section-footer {
+    margin-top: var(--spacing-2xl);
+  }
+
+  .services-preview {
+    background: var(--color-white);
+    position: relative;
+  }
+
+  [data-theme="dark"] .services-preview {
+    background: var(--color-white);
+  }
+
+  .work-preview {
+    background: linear-gradient(to bottom, var(--color-white), #f8f9fa);
+  }
+
+  [data-theme="dark"] .work-preview {
+    background: linear-gradient(to bottom, var(--color-white), rgba(15, 23, 42, 0.8));
+  }
+
+  .testimonials-preview {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+    padding: var(--spacing-2xl) 0;
+  }
+
+  [data-theme="dark"] .testimonials-preview {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.9) 100%);
+  }
+
+  .testimonials-preview .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonials-carousel-container {
+    max-width: 900px;
+    margin: 0 auto var(--spacing-xl);
+    position: relative;
+    z-index: 2;
+  }
+
+  .testimonials-preview .section-footer {
+    margin-top: var(--spacing-xl);
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-section {
+    background: var(--gradient-secondary);
+    color: var(--color-white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+    padding: var(--spacing-2xl) 0;
+  }
+
+  [data-theme="dark"] .cta-section {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(21, 207, 170, 0.1), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta-content h2 {
+    color: var(--color-white);
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+  }
+
+  .cta-content > p {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-xl);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .cta-guarantee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9375rem;
+    margin-top: var(--spacing-lg);
+  }
+
+  .guarantee-icon {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      min-height: auto;
+      padding: var(--spacing-2xl) 0;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero-content {
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-cta .btn-primary,
+    .hero-cta .btn-secondary-outline {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+    }
+
+    .cta-buttons .btn {
+      width: 100%;
+    }
+  }
+</style>

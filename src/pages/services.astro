@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import EnhancedServiceCard from '../components/EnhancedServiceCard.astro';
+import ServiceSimulator from '../components/ServiceSimulator.astro';
+
+import servicesData from '../data/services.json';
+
+const serviceIcons: Record<string, string> = {
+  'Web Development': '💻',
+  'UI/UX Design': '🎨',
+  'SEO Optimization': '📈',
+  'Digital Strategy': '🚀',
+  'E-commerce Solutions': '🛒',
+  'Brand Identity': '✨'
+};
+
+const serviceFeatures: Record<string, string[]> = {
+  'Web Development': ['Custom Solutions', 'Modern Frameworks', 'Performance Optimized', 'Scalable Architecture'],
+  'UI/UX Design': ['User Research', 'Prototyping', 'Design Systems', 'Accessibility First'],
+  'SEO Optimization': ['Keyword Research', 'Technical SEO', 'Content Strategy', 'Analytics Setup'],
+  'Digital Strategy': ['Market Analysis', 'Growth Planning', 'ROI Optimization', 'Competitive Edge'],
+  'E-commerce Solutions': ['Payment Integration', 'Inventory Management', 'Mobile Optimized', 'Analytics Tracking'],
+  'Brand Identity': ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy']
+};
+---
+
+<BaseLayout
+  title="Our Services - Hashturn"
+  description="Comprehensive digital services including web development, UI/UX design, SEO optimization, and digital strategy. Discover how we can help your business succeed."
+  canonical="/services"
+>
+  <section class="services-page section">
+    <div class="container">
+      <header class="page-header">
+        <span class="section-label">Services</span>
+        <h1>Our Services</h1>
+        <p class="page-intro">
+          We offer a full range of digital services to help your business thrive online. 
+          From custom web development to strategic consulting, we've got you covered.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        {servicesData.map((service) => (
+          <EnhancedServiceCard
+            title={service.title}
+            description={service.description}
+            icon={serviceIcons[service.title] || '✨'}
+            features={serviceFeatures[service.title]}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Simulator Section -->
+  <section class="simulator-section section">
+    <div class="container">
+      <ServiceSimulator />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .services-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .services-page {
+    background: var(--color-white);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+</style>
+

@@ -1,0 +1,386 @@
+---
+// Enhanced Project Card with modern glassmorphism design
+interface Props {
+  name: string;
+  description: string;
+  techStack: string[];
+  industry?: string;
+  thumbnail: string;
+  externalLink?: string;
+}
+
+const { name, description, techStack, industry, thumbnail, externalLink } = Astro.props;
+const cardId = `project-card-${name.toLowerCase().replace(/\s+/g, '-')}`;
+---
+
+<article class="project-card-3d relative bg-[var(--color-secondary)] border border-primary/20 rounded-2xl md:rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/20 hover:border-primary/40 group aspect-[16/9] flex flex-col" id={cardId} data-card-3d>
+  <div class="card-overlay absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+  <div class="card-shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20"></div>
+  
+  <div class="project-image-wrapper">
+    <div class="image-overlay"></div>
+    <img 
+      src={thumbnail} 
+      alt={`${name} project thumbnail`}
+      class="project-image"
+      loading="lazy"
+    />
+    <div class="image-gradient"></div>
+  </div>
+  
+  <div class="project-content">
+    {industry && (
+      <div class="industry-badge">
+        <span class="badge-text">{industry}</span>
+      </div>
+    )}
+    
+    <h3 class="project-name">{name}</h3>
+    
+    <p class="project-description">{description}</p>
+    
+    <div class="project-tech">
+      <span class="tech-label">Tech Stack</span>
+      <ul class="tech-list">
+        {techStack.map((tech, index) => (
+          <li class="tech-item" style={`animation-delay: ${index * 0.05}s`}>
+            {tech}
+          </li>
+        ))}
+      </ul>
+    </div>
+    
+    {externalLink && (
+      <div class="card-footer">
+        <a 
+          href={externalLink} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="project-link"
+          aria-label={`View ${name} project`}
+        >
+          <span>View Project</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    )}
+  </div>
+  
+  <div class="card-border-glow"></div>
+</article>
+
+<script>
+  // Enhanced 3D tilt effect with parallax
+  const init3DCards = () => {
+    const cards = document.querySelectorAll('[data-card-3d]');
+    
+    cards.forEach((card) => {
+      let isHovering = false;
+      
+      const handleMouseMove = (e) => {
+        if (!isHovering) return;
+        
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 15;
+        const rotateY = (centerX - x) / 15;
+        
+        const shine = card.querySelector('.card-shine');
+        if (shine) {
+          shine.style.opacity = '1';
+          shine.style.left = `${x}px`;
+          shine.style.top = `${y}px`;
+        }
+        
+        card.style.transform = `
+          perspective(1000px) 
+          rotateX(${rotateX}deg) 
+          rotateY(${rotateY}deg) 
+          scale3d(1.03, 1.03, 1.03)
+        `;
+      };
+      
+      const handleMouseEnter = () => {
+        isHovering = true;
+        card.classList.add('hovering');
+      };
+      
+      const handleMouseLeave = () => {
+        isHovering = false;
+        card.classList.remove('hovering');
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        const shine = card.querySelector('.card-shine');
+        if (shine) {
+          shine.style.opacity = '0';
+        }
+      };
+      
+      card.addEventListener('mousemove', handleMouseMove);
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+  };
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init3DCards);
+  } else {
+    init3DCards();
+  }
+</script>
+
+<style>
+  .project-card-3d {
+    box-shadow: var(--shadow-md);
+  }
+
+  .project-card-3d:hover {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-overlay {
+    background: linear-gradient(135deg, rgba(21, 207, 170, 0.05) 0%, rgba(130, 232, 200, 0.03) 100%);
+  }
+
+  .project-content {
+    position: relative;
+    z-index: 20;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background: var(--color-secondary);
+  }
+
+  .project-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(130, 232, 200, 0.1) 0%, rgba(21, 207, 170, 0.05) 100%);
+  }
+
+  .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+  }
+
+  .project-card-3d:hover .project-image {
+    transform: scale(1.08);
+  }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 10;
+    opacity: 1;
+    transition: opacity var(--transition-base);
+  }
+
+  .project-card-3d:hover .image-overlay {
+    opacity: 0.5;
+  }
+
+  .image-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, var(--color-secondary) 0%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .industry-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(21, 207, 170, 0.1);
+    border: 1px solid rgba(21, 207, 170, 0.2);
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    width: fit-content;
+    transition: all var(--transition-fast);
+  }
+
+  .project-card-3d:hover .industry-badge {
+    background: rgba(21, 207, 170, 0.15);
+    border-color: rgba(21, 207, 170, 0.3);
+  }
+
+  .badge-text {
+    color: var(--color-accent);
+    font-size: 12px;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .project-name {
+    color: var(--color-white);
+    font-size: 28px;
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .project-description {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+    font-size: 15px;
+  }
+
+  .card-border-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-primary), var(--color-accent), var(--color-primary));
+    background-size: 200% 100%;
+    opacity: 0;
+    filter: blur(4px);
+    transition: opacity var(--transition-base);
+  }
+
+  .project-card-3d:hover .card-border-glow {
+    opacity: 0.6;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .project-tech {
+    margin-bottom: 24px;
+  }
+
+  .tech-label {
+    font-weight: var(--font-weight-semibold);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    display: block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tech-item {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: var(--font-weight-medium);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-fast);
+    animation: fadeInUp 0.5s ease both;
+    animation-fill-mode: forwards;
+  }
+
+  .project-card-3d:hover .tech-item {
+    background: rgba(130, 232, 200, 0.15);
+    border-color: rgba(130, 232, 200, 0.3);
+  }
+
+  .card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-accent);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-size: 15px;
+  }
+
+  .project-link:hover,
+  .project-link:focus {
+    color: var(--color-primary);
+    gap: 12px;
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-fast);
+  }
+
+  .project-link:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-content {
+      padding: 24px;
+    }
+
+    .project-name {
+      font-size: 24px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-content {
+      padding: 20px;
+    }
+
+    .project-name {
+      font-size: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card-3d,
+    .project-image,
+    .tech-item,
+    .project-link {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    .project-card-3d:hover {
+      transform: translateY(-4px) !important;
+    }
+  }
+</style>

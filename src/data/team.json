@@ -1,0 +1,75 @@
+[
+  {
+    "id": "team-1",
+    "name": "Zeeshan Bilal",
+    "role": "CEO & Founder",
+    "bio": "Visionary leader with 15+ years of experience in digital transformation and web development.",
+    "image": "/images/team/zb.jpeg",
+    "linkedin": "https://linkedin.com/in/alexjohnson",
+    "twitter": "https://twitter.com/alexjohnson"
+  },
+  {
+    "id": "team-2",
+    "name": "Muhammad Awais Anwar",
+    "role": "CTO",
+    "bio": "Creative designer specializing in UI/UX with a passion for creating beautiful, functional interfaces.",
+    "image": "/images/team/aa.jpeg",
+    "linkedin": "https://linkedin.com/in/sarahmartinez",
+    "twitter": "https://twitter.com/sarahmartinez"
+  },
+  {
+    "id": "team-3",
+    "name": "Qazi Zubair",
+    "role": "MERN Stack Developer",
+    "bio": "Full-stack developer expert in modern frameworks and cloud technologies.",
+    "image": "/images/team/qz.png",
+    "linkedin": "https://linkedin.com/in/michaelchen",
+    "twitter": "https://twitter.com/michaelchen"
+  },
+  {
+    "id": "team-4",
+    "name": "Zaid Nehal",
+    "role": "Senior Software Engineer/Developer",
+    "bio": "Digital marketing expert focused on driving organic growth and improving search visibility.",
+    "image": "/images/team/ZaidNehal.jpeg",
+    "linkedin": "https://linkedin.com/in/emilyrodriguez",
+    "twitter": "https://twitter.com/emilyrodriguez"
+  },
+  {
+    "id": "team-5",
+    "name": "Rizwan Khan",
+    "role": "AI Automation Engineer",
+    "bio": "Experienced project manager ensuring smooth delivery and client satisfaction.",
+    "image": "/images/team/Rk.png",
+    "linkedin": "https://linkedin.com/in/davidthompson",
+    "twitter": "https://twitter.com/davidthompson"
+  },
+  {
+    "id": "team-6",
+    "name": "Muhammad Abubakar",
+    "role": "React/Nextjs Developer",
+    "bio": "Content creator and strategist helping brands tell their stories effectively.",
+    "image": "/images/team/abubakar.jpeg",
+    "linkedin": "https://linkedin.com/in/lisaanderson",
+    "twitter": "https://twitter.com/lisaanderson"
+  },
+  {
+    "id": "team-7",
+    "name": "Ahsan Raza Alvi",
+    "role": "UI/UX Designer",
+    "bio": "Content creator and strategist helping brands tell their stories effectively.",
+    "image": "/images/team/ar.jpg",
+    "linkedin": "https://linkedin.com/in/lisaanderson",
+    "twitter": "https://twitter.com/lisaanderson" 
+  },
+  {
+    "id": "team-8",
+    "name": "Muhammad Yousaf Elahi",
+    "role": "CFO",
+    "bio": "Content creator and strategist helping brands tell their stories effectively.",
+    "image": "/images/team/ya.jpeg",
+    "linkedin": "https://linkedin.com/in/lisaanderson",
+    "twitter": "https://twitter.com/lisaanderson" 
+  }
+]
+

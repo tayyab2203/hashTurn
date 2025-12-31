@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<BaseLayout
+  title="Contact Us - Hashturn"
+  description="Get in touch with Hashturn to discuss your project. We're here to help transform your digital presence and drive your business forward."
+  canonical="/contact"
+>
+  <section class="contact-page section">
+    <div class="container">
+      <header class="page-header">
+        <h1>Contact Us</h1>
+        <p class="page-intro">
+          Ready to start your project? We'd love to hear from you. 
+          Fill out the form below or reach out directly.
+        </p>
+      </header>
+
+      <div class="contact-content">
+        <div class="contact-info">
+          <div class="info-section">
+            <h2>Get in Touch</h2>
+            <p>
+              Whether you have a question about our services, need a quote, 
+              or want to discuss a potential project, we're here to help.
+            </p>
+            
+            <div class="contact-details">
+              <div class="contact-item">
+                <h3>Email</h3>
+                <a href="mailto:info@hashturn.com">info@hashturn.com</a>
+              </div>
+              
+              <div class="contact-item">
+                <h3>Response Time</h3>
+                <p>We typically respond within 24 hours</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+          <ContactForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .contact-page {
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .contact-info {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.5) 0%, rgba(30, 41, 59, 0.3) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .contact-form-wrapper {
+    background: var(--gradient-card);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .contact-content {
+      grid-template-columns: 1fr 1.5fr;
+    }
+  }
+
+  .contact-info {
+    background: linear-gradient(135deg, rgba(130, 232, 200, 0.1) 0%, rgba(21, 207, 170, 0.05) 100%);
+    border-radius: 8px;
+    padding: var(--spacing-xl);
+  }
+
+  .info-section h2 {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+  }
+
+  [data-theme="dark"] .info-section h2 {
+    color: var(--color-text);
+  }
+
+  .info-section > p {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .contact-item h3 {
+    color: var(--color-text);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  [data-theme="dark"] .contact-item h3 {
+    color: var(--color-text);
+  }
+
+  .contact-item a {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .contact-item a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .contact-item p {
+    color: var(--color-text-light);
+    margin: 0;
+  }
+
+  .contact-form-wrapper {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--spacing-xl);
+  }
+</style>
+

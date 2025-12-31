@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import TeamCarousel from '../components/TeamCarousel.astro';
+---
+
+<BaseLayout
+  title="About Hashturn - Our Company"
+  description="Learn about Hashturn, our mission, vision, and commitment to delivering exceptional digital solutions. Discover what drives us to create outstanding web experiences."
+  canonical="/company"
+>
+  <section class="company-page section">
+    <div class="container">
+      <header class="page-header">
+        <h1>About Hashturn</h1>
+        <p class="page-intro">
+          We're a team of passionate developers, designers, and strategists dedicated 
+          to helping businesses succeed in the digital world.
+        </p>
+      </header>
+
+      <div class="company-content">
+        <section class="content-section">
+          <h2>Our Mission</h2>
+          <p>
+            At Hashturn, our mission is to empower businesses with exceptional digital 
+            solutions that drive growth and success. We believe in creating websites and 
+            applications that not only look great but also deliver measurable results.
+          </p>
+          <p>
+            We combine cutting-edge technology with creative design and strategic thinking 
+            to help our clients achieve their goals. Every project we undertake is an 
+            opportunity to make a meaningful impact.
+          </p>
+        </section>
+
+        <section class="content-section">
+          <h2>Our Vision</h2>
+          <p>
+            We envision a digital landscape where every business has access to world-class 
+            web solutions. Our vision is to be the trusted partner that businesses turn to 
+            when they need to transform their online presence.
+          </p>
+          <p>
+            Through innovation, excellence, and a commitment to continuous learning, we 
+            strive to set new standards in web development and digital strategy. We're not 
+            just building websites—we're building the future of digital experiences.
+          </p>
+        </section>
+
+        <section class="content-section">
+          <h2>What We Stand For</h2>
+          <div class="values-grid">
+            <div class="value-item">
+              <h3>Excellence</h3>
+              <p>We never settle for good enough. Every project is an opportunity to exceed expectations.</p>
+            </div>
+            <div class="value-item">
+              <h3>Innovation</h3>
+              <p>We stay ahead of the curve, using the latest technologies and best practices.</p>
+            </div>
+            <div class="value-item">
+              <h3>Transparency</h3>
+              <p>Clear communication and honest feedback are at the heart of everything we do.</p>
+            </div>
+            <div class="value-item">
+              <h3>Results</h3>
+              <p>We measure success by the impact we create for our clients and their businesses.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section section">
+    <div class="container">
+      <header class="section-header">
+        <span class="section-label">Our Team</span>
+        <h2>Meet the Experts</h2>
+        <p>Talented professionals dedicated to delivering exceptional results</p>
+      </header>
+      <TeamCarousel />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .company-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .company-page {
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .content-section h2 {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .value-item {
+    background: var(--gradient-card);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .value-item h3 {
+    color: var(--color-accent);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .company-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .content-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .content-section h2 {
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 3px solid var(--color-primary);
+    padding-bottom: var(--spacing-sm);
+  }
+
+  .content-section p {
+    line-height: 1.8;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+  }
+
+  @media (min-width: 768px) {
+    .values-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .company-page {
+      padding-top: var(--spacing-lg);
+    }
+    
+    .page-header {
+      margin-bottom: var(--spacing-xl);
+      padding: 0 var(--spacing-sm);
+    }
+    
+    .page-header h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+    }
+    
+    .page-intro {
+      font-size: 1rem;
+    }
+    
+    .company-content {
+      padding: 0 var(--spacing-sm);
+    }
+    
+    .content-section {
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .content-section h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+    
+    .content-section p {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+    
+    .value-item {
+      padding: var(--spacing-md);
+    }
+    
+    .value-item h3 {
+      font-size: 1.25rem;
+    }
+    
+    .team-section {
+      padding: var(--spacing-xl) 0;
+    }
+    
+    .section-header {
+      margin-bottom: var(--spacing-xl);
+      padding: 0 var(--spacing-sm);
+    }
+    
+    .section-header h2 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+    }
+    
+    .section-header p {
+      font-size: 1rem;
+    }
+  }
+
+  .value-item {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+  }
+
+  .value-item:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .value-item h3 {
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.5rem;
+  }
+
+  .value-item p {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .team-section {
+    background: linear-gradient(to bottom, var(--color-white), #f8f9fa);
+    padding: var(--spacing-2xl) 0;
+  }
+
+  [data-theme="dark"] .team-section {
+    background: linear-gradient(to bottom, var(--color-white), rgba(15, 23, 42, 0.8));
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--gradient-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .section-header h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+  }
+
+  .section-header p {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+</style>
+

@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+
+import blogData from '../../data/blog.json';
+
+// Sort by date, newest first
+const sortedPosts = [...blogData].sort((a, b) => 
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+---
+
+<BaseLayout
+  title="Insights & Blog - Hashturn"
+  description="Read our latest insights on web development, SEO, design, and digital strategy. Stay updated with industry trends and best practices."
+  canonical="/insights"
+>
+  <section class="insights-page section">
+    <div class="container">
+      <header class="page-header">
+        <h1>Insights & Blog</h1>
+        <p class="page-intro">
+          Stay informed with our latest articles on web development, design trends, 
+          SEO strategies, and digital innovation.
+        </p>
+      </header>
+
+      <div class="blog-list">
+        {sortedPosts.map((post) => {
+          const postDate = new Date(post.date);
+          const formattedDate = postDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
+          return (
+            <article class="blog-card">
+              <div class="blog-meta">
+                <span class="blog-category">{post.category}</span>
+                <time datetime={post.date} class="blog-date">{formattedDate}</time>
+              </div>
+              <h2 class="blog-title">
+                <a href={`/insights/${post.slug}`}>{post.title}</a>
+              </h2>
+              <p class="blog-excerpt">{post.excerpt}</p>
+              <a href={`/insights/${post.slug}`} class="blog-link">
+                Read More →
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .insights-page {
+    padding-top: var(--spacing-xl);
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .insights-page {
+    background: var(--color-white);
+  }
+
+  [data-theme="dark"] .blog-card {
+    background: var(--gradient-card);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .blog-title a {
+    color: var(--color-text);
+  }
+
+  [data-theme="dark"] .blog-title a:hover {
+    color: var(--color-accent);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    line-height: 1.7;
+  }
+
+  .blog-list {
+    display: grid;
+    gap: var(--spacing-xl);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .blog-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 4px 12px rgba(30, 55, 86, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .blog-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.875rem;
+  }
+
+  .blog-category {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .blog-date {
+    color: var(--color-text-light);
+  }
+
+  .blog-title {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .blog-title a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .blog-title a:hover {
+    color: var(--color-accent);
+  }
+
+  .blog-excerpt {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .blog-link {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .blog-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+</style>
+

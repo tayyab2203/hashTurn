@@ -1,0 +1,282 @@
+---
+interface Props {
+  clientName: string;
+  companyName: string;
+  feedback: string;
+  rating?: number;
+}
+
+const { clientName, companyName, feedback, rating } = Astro.props;
+---
+
+<article class="testimonial-card group">
+  <div class="card-pattern"></div>
+  <div class="quote-mark">"</div>
+  
+  <div class="testimonial-content">
+    <blockquote class="testimonial-quote">
+      <p class="testimonial-text">{feedback}</p>
+    </blockquote>
+  </div>
+  
+  <div class="testimonial-author">
+    <div class="author-avatar">
+      <div class="avatar-initial">{clientName.charAt(0)}</div>
+    </div>
+    <div class="author-info">
+      <p class="author-name">{clientName}</p>
+      <p class="author-company">{companyName}</p>
+    </div>
+    {rating && (
+      <div class="testimonial-rating" aria-label={`Rating: ${rating} out of 5 stars`}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <svg 
+            class={`star ${i < rating ? 'active' : ''}`}
+            viewBox="0 0 24 24" 
+            fill="none"
+            aria-hidden="true"
+          >
+            <path 
+              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" 
+              fill={i < rating ? "currentColor" : "none"}
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        ))}
+      </div>
+    )}
+  </div>
+  
+  <div class="card-accent-line"></div>
+</article>
+
+<style>
+  .testimonial-card {
+    position: relative;
+    background: var(--color-secondary);
+    border: 1px solid rgba(130, 232, 200, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(130, 232, 200, 0.4);
+  }
+
+  .card-pattern {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(130, 232, 200, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(25%, -25%);
+    pointer-events: none;
+    transition: transform var(--transition-base);
+  }
+
+  .testimonial-card:hover .card-pattern {
+    transform: translate(20%, -20%) scale(1.1);
+  }
+
+  .quote-mark {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    font-size: 120px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.15;
+    line-height: 1;
+    font-family: serif;
+    transition: all var(--transition-base);
+    z-index: 0;
+  }
+
+  .testimonial-card:hover .quote-mark {
+    opacity: 0.2;
+    transform: scale(1.1) rotate(3deg);
+  }
+
+  .testimonial-content {
+    position: relative;
+    z-index: 10;
+    flex-grow: 1;
+    margin-bottom: 24px;
+    padding-top: 80px;
+  }
+
+  .testimonial-quote {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .testimonial-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+    font-style: italic;
+    position: relative;
+    z-index: 10;
+  }
+
+  .testimonial-author {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(130, 232, 200, 0.2);
+  }
+
+  .author-avatar {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(21, 207, 170, 0.3);
+    transition: all var(--transition-base);
+  }
+
+  .testimonial-card:hover .author-avatar {
+    transform: scale(1.1) rotate(3deg);
+    box-shadow: 0 8px 16px rgba(21, 207, 170, 0.4);
+  }
+
+  .avatar-initial {
+    font-size: 28px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    text-transform: uppercase;
+  }
+
+  .author-info {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .author-name {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    margin: 0 0 4px 0;
+    font-size: 18px;
+  }
+
+  .author-company {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .testimonial-rating {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .star {
+    width: 20px;
+    height: 20px;
+    transition: all var(--transition-fast);
+  }
+
+  .star.active {
+    color: var(--color-accent);
+    filter: drop-shadow(0 2px 4px rgba(21, 207, 170, 0.3));
+  }
+
+  .testimonial-card:hover .star.active {
+    transform: scale(1.25);
+    filter: drop-shadow(0 4px 8px rgba(21, 207, 170, 0.5));
+  }
+
+  .star:not(.active) {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  .card-accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-primary), var(--color-accent), var(--color-primary));
+    background-size: 200% 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-base);
+  }
+
+  .testimonial-card:hover .card-accent-line {
+    transform: scaleX(1);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @media (max-width: 768px) {
+    .testimonial-card {
+      padding: 24px;
+    }
+
+    .quote-mark {
+      font-size: 80px;
+      top: 12px;
+      left: 16px;
+    }
+
+    .testimonial-content {
+      padding-top: 60px;
+    }
+
+    .author-avatar {
+      width: 56px;
+      height: 56px;
+    }
+
+    .avatar-initial {
+      font-size: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .testimonial-card,
+    .card-pattern,
+    .quote-mark,
+    .author-avatar,
+    .star,
+    .card-accent-line {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px) !important;
+    }
+  }
+</style>
